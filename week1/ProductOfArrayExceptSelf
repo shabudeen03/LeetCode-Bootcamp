@@ -1,0 +1,31 @@
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var productExceptSelf = function(nums) {
+    /*
+    General Case (at most 1 zero) - Calculate product (ignore 0)
+        - Set array[i] = product / array[i] for elements
+            - If exactly 1 zero, only set to that
+        - Set rest to 0 (if detected a zero)
+
+    Analysis
+        Time Complexity - O(n)
+        Space Complexity - O(1)
+    */
+
+    const answerArray = Array(nums.length).fill(0); //by default (handles 2+ zeroes case)
+
+    answerArray[0] = 1;
+    for(let i=1; i<nums.length; i++) {
+        answerArray[i] = answerArray[i-1] * nums[i-1];
+    }
+
+    let product = 1;
+    for(let i=nums.length-1; i>=0; i--) {
+        answerArray[i] *= product;
+        product *= nums[i];
+    }
+
+    return answerArray;
+};
