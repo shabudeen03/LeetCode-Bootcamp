@@ -1,0 +1,56 @@
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var myAtoi = function(s) {
+    let isPositive = true;
+
+    //ignore whitespace
+    let index = 0; //of the characters in s
+    while(index < s.length && s[index] === ' ') {
+        index++;
+    }
+
+    //determine signdness
+    if(s[index] === '-') {
+        isPositive = false;
+        index++;
+    }
+
+    if(s[index] === '+') {
+        if(!isPositive) return 0; //if both signs show up
+        index++;
+    }
+
+    //skip leading 0s
+    while(index < s.length && s[index] === '0') {
+        index++;
+    }
+
+    //read the digits
+    let integer = 0;
+    while(index < s.length && /\d/.test(s[index])) {
+        integer *= 10;
+        integer += parseInt(s[index]);
+        
+        index++;
+    }
+
+    //round as needed & check signs
+    const MAX_INT = - (1 << 31) - 1;
+    const MIN_INT = 1 << 31;
+
+    if(!isPositive) {
+        integer *= -1;
+        if(integer < MIN_INT) {
+            integer = MIN_INT;
+        }
+        return integer;
+    }
+
+    if(integer > MAX_INT) {
+        integer = MAX_INT;
+    }
+
+    return integer; 
+};
