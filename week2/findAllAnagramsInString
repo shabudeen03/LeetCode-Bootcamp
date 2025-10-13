@@ -1,0 +1,44 @@
+/**
+ * @param {string} s
+ * @param {string} p
+ * @return {number[]}
+ */
+var findAnagrams = function(s, p) {
+    /*
+        Generate p's anagram
+        Given size of p  = m
+        At each index of s of size n from 0 to n - m,
+            Generate anagram of substring size m
+            If matches p's anagram, push index to array
+        Return array
+        
+        Time: O(nm) for s of size n and p of size m
+        Space: O(n) for at most n possible anagrams
+    */
+
+    //I will use a frequency of alphabet letters to track anagrams
+    let anagram = Array(26).fill(0);
+    for(const char of p) {
+        const letterCode = char.charCodeAt(0) - 'a'.charCodeAt(0);
+        anagram[letterCode]++;
+    }
+
+    let pCode = anagram.join("");
+    let results = [];
+
+    //Now Generate substrings
+    for(let i=0; i<=s.length - p.length; i++) {
+        anagram.fill(0);
+        for(let j=i; j<i + p.length; j++) {
+            const letterCode = s[j].charCodeAt(0) - 'a'.charCodeAt(0);
+            anagram[letterCode]++;
+        }
+        
+        let code = anagram.join("");
+        if(code === pCode) {
+            results.push(i);
+        }
+    }
+
+    return results;
+};
