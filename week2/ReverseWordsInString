@@ -1,0 +1,24 @@
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var reverseWords = function(s) {
+    // words in string, separated by space
+    // s may contain leading/trailing/multiple spaces
+
+    /*
+        Trim whitespace on both ends
+        Then split by space to array of words
+        Then just add onto string from last word
+    */
+
+    s = s.trim();
+    let words = s.split(/\s+/);
+    let newS = "";
+    for(let i=words.length - 1; i>0; i--) {
+        newS += words[i] + " ";
+    }
+
+    newS += words[0];
+    return newS;
+};
