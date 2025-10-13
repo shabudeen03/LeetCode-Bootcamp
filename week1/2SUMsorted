@@ -1,0 +1,40 @@
+/**
+ * @param {number[]} numbers
+ * @param {number} target
+ * @return {number[]}
+ */
+var twoSum = function(numbers, target) {
+    /*
+        Non-decreasing array
+        2 pointers
+            Right - pointer to last element
+            Left - pointer to first element
+
+            If left + right > target
+                decrement right pointer index
+            else if left + right < target
+                increment left pointer index
+            else
+                return [left + 1, right + 1]
+        
+        The + 1 to make sure indexes are 1-based
+
+        Analysis:
+            Time Complexity - O(n) - at worst, check all elements from left to right
+            Space Complexity - O(1) - only 2 pointers
+    */
+
+    let left = 0;
+    let right = numbers.length - 1;
+    while(left < right) {
+        if(numbers[left] + numbers[right] > target) {
+            right--;
+        } else if(numbers[left] + numbers[right] < target) {
+            left++;
+        } else {
+            return [left + 1, right + 1];
+        }
+    }
+
+    return [1, 2]; //default its just 2 elements
+};
