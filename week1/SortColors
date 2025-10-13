@@ -1,0 +1,38 @@
+/**
+ * @param {number[]} nums
+ * @return {void} Do not return anything, modify nums in-place instead.
+ */
+var sortColors = function(nums) {
+    /*
+        Count # of 0s, 1s, and 2s
+        Then just fill in the values in ascending order based on count
+
+        Time Complexity - O(n)
+        Space Complexity - O(1) only 3 constant variables created
+    */
+
+    let numZeroes = 0;
+    let numOnes = 0;
+    let numTwos = 0;
+    for(const num of nums) {
+        if(num === 0) {
+            numZeroes++;
+        } else if(num === 1) {
+            numOnes++;
+        } else if(num === 2) {
+            numTwos++;
+        }
+    }
+
+    for(let i=0; i<numZeroes; i++) {
+        nums[i] = 0;
+    }
+
+    for(let i=numZeroes; i<numZeroes+numOnes; i++) {
+        nums[i] = 1;
+    }
+
+    for(let i=numZeroes+numOnes; i<numZeroes+numOnes+numTwos; i++) {
+        nums[i] = 2;
+    }
+};
