@@ -1,0 +1,40 @@
+/**
+ * @param {number[][]} matrix
+ * @return {void} Do not return anything, modify matrix in-place instead.
+ */
+var setZeroes = function(matrix) {
+    /*
+        First-pass: O(m) time, O(1) space
+            Iterate each row
+                If 0 found
+                    turn row into 0s    
+                    push column index into set
+
+        Second-pass: O(n) time, O(1) space
+            Pop column indexes
+            Turn column into 0s
+    */
+
+    const columnIndices = new Set();
+    for(let i=0; i<matrix.length; i++) {
+        let isSet = false;
+        for(let j=0; j<matrix[i].length; j++) {
+            if(matrix[i][j] === 0) {
+                columnIndices.add(j);
+                isSet = true;
+            }
+        }
+
+        if(isSet) {
+            matrix[i] = Array(matrix[i].length).fill(0);
+        }
+    }
+
+    for(const columnIndex of columnIndices) {
+        for(let i=0; i<matrix.length; i++) {
+            matrix[i][columnIndex] = 0;
+        }
+    }
+
+    console.log(matrix);
+};
