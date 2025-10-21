@@ -1,0 +1,70 @@
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @return {void} Do not return anything, modify head in-place instead.
+ */
+var reorderList = function(head) {
+    /*
+        I can use 2 pointers (fast & slow)
+        
+        First-pass O(n) time, O(1) space
+            Device fast to reach end, then slow is at middle index
+        
+        Second iteration O(n)
+            Reverse second half of the list
+            
+        Third Iteration O(n)
+            Interconnect the 2 lists
+    */
+
+    if(!head || !head.next) {
+        return head;
+    }
+
+    //get location of elements at the middle of the list
+    let prev;
+    let fast = head;
+    let slow = head;
+    while(fast && fast.next) {
+        prev = slow;
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+
+    //Cutoff connection between first half and second half
+    prev.next = null;
+
+    //reverse the second half
+    let oneBefore = null;
+    let current = slow;
+    while(current !== null) {
+        let temp = current.next;
+
+        current.next = oneBefore;
+        oneBefore = current;
+        current = temp;
+    }
+
+    //now interleave the 2 halves
+    let p1 = head;
+    let p2 = oneBefore;
+    let dummy = new ListNode(); //dummy node
+    let curr = dummy;
+    while(p1 && p2) {
+        curr.next = p1;
+        p1 = p1.next;
+        curr = curr.next;
+
+        curr.next = p2;
+        p2 = p2.next;
+        curr = curr.next;
+    }
+
+    return dummy.next;
+};
