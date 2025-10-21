@@ -1,0 +1,66 @@
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @return {boolean}
+ */
+var isPalindrome = function(head) {
+    /*      
+        O(n) time
+        O(1) space
+        If list does not need to be preserved
+
+        First-pass:
+            Slow & Fast points to get to the middle
+        
+        Reverse the second half of the list
+        Then just check each half for palindrome
+    */
+
+    if(!head || !head.next) {
+        return true; //edge cases
+    }
+
+    let slow = head;
+    let fast = head;
+    let oneBeforeMid;
+    while(fast && fast.next) {
+        oneBeforeMid = slow;
+        fast = fast.next.next;
+        slow = slow.next;
+    }
+
+    //cutoff the 2 halves
+    oneBeforeMid.next = null;
+
+    //reverse second-half
+    let prev = null;
+    let curr = slow;
+    while(curr) {
+        let temp = curr.next;
+        curr.next = prev;
+        prev = curr;
+        curr = temp;
+    }
+
+    console.log(prev, slow);
+
+    //now check the 2 lists
+    let p1 = head;
+    let p2 = prev;
+    while(p1 && p2) {
+        if(p1.val !== p2.val) {
+            return false;
+        }
+
+        p1 = p1.next;
+        p2 = p2.next;
+    }
+
+    return true; 
+};
