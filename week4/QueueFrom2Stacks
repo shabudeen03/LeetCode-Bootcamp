@@ -1,0 +1,65 @@
+
+var MyQueue = function() {
+    /*
+        Push is O(n) as n elements have to be shifted back and forth to preserve FIFO
+        Pop is O(1)
+
+        Space - O(n)
+
+    */
+    this.stackA = [];
+    this.stackB = [];
+};
+
+/** 
+ * @param {number} x
+ * @return {void}
+ */
+MyQueue.prototype.push = function(x) {
+    //pop and push existing elements to stack B (reverse order)
+    while(this.stackA.length > 0) {
+        let popped = this.stackA.pop();
+        this.stackB.push(popped);
+    }
+
+    //now push current element so it is first in stack, but last to be accessed
+        //therefore first element pushed to stack is first to get out
+
+    this.stackA.push(x);
+
+    //now pop stack B and put back to stack
+    while(this.stackB.length > 0) {
+        let popped = this.stackB.pop();
+        this.stackA.push(popped);
+    }
+};
+
+/**
+ * @return {number}
+ */
+MyQueue.prototype.pop = function() {
+    return this.stackA.pop(); 
+};
+
+/**
+ * @return {number}
+ */
+MyQueue.prototype.peek = function() {
+    return this.stackA[this.stackA.length - 1];
+};
+
+/**
+ * @return {boolean}
+ */
+MyQueue.prototype.empty = function() {
+    return this.stackA.length === 0;
+};
+
+/** 
+ * Your MyQueue object will be instantiated and called as such:
+ * var obj = new MyQueue()
+ * obj.push(x)
+ * var param_2 = obj.pop()
+ * var param_3 = obj.peek()
+ * var param_4 = obj.empty()
+ */
