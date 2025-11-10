@@ -1,0 +1,40 @@
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number[]}
+ */
+var topKFrequent = function(nums, k) {
+    //2 data structures
+        //one is hashmap of all key-value pairs
+        //the other is array of these key-value pairs
+    //Use hashmap to efficiently retrieve and store
+    //then write to array, sort the array descending based on counts 
+    //Return k most frequent (first k elements of sorted array)
+
+    //Time - O(nlogn) as sorting takes the most time
+    //Space - O(n) as dependant only on # of elements
+
+
+    const elementCounts = new Map();
+    for(const num of nums) {
+        if(elementCounts.has(num)) {
+            elementCounts.set(num, elementCounts.get(num) + 1);
+        } else {
+            elementCounts.set(num, 1);
+        }
+    }
+
+    const pairs = [];
+    for(const [key, value] of elementCounts) {
+        pairs.push([key, value]);
+    }
+
+    pairs.sort((a, b) => b[1] - a[1]);
+
+    const result = [];
+    for(let i=0; i<k; i++) {
+        result.push(pairs[i][0]);
+    }
+
+    return result;
+};
