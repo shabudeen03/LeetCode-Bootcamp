@@ -1,0 +1,41 @@
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var maxSubArray = function(nums) {
+    /*
+        If all numbers are positive, just return entire array sum
+        Dynamic Programming - 
+            Start with subset total = 0, currentSum = first_value
+            For each number in the array
+                if total < 0 
+                    total = 0 because we want greatest subset (previous negative sum won't help)
+                    
+                total += number 
+
+                if(total > currentSum) currentSum = total if total is better than the existing result
+
+        O(n) time
+        O(1) space
+    */
+
+    if(Math.min(...nums) >= 0) {
+        return nums.reduce((acc, curr) => acc += curr, 0);
+    }
+
+    let total = 0;
+    let sum = nums[0];
+
+    for(const num of nums) {
+        if(total < 0) {
+            total = 0;
+        }
+
+        total += num;
+        if(total > sum) {
+            sum = total;
+        }
+    }
+
+    return sum;
+};
