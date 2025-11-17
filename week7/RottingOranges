@@ -1,0 +1,101 @@
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
+var orangesRotting = function(grid) {
+    /*
+        Because the oranges go corrupt minute by minute, BFS is better suited to this than the DFS as BFS is good for level-order, time-elapsed type of problems. 
+
+        Solution:
+            Use a queue
+            Nested loop: Scan for all rotten oranges, put them in the queue
+                Also track all the fruits (count as well as num Rotten)
+            Now perform BFS
+            while queue not empty 
+                t++
+                For each rotten orange in the queue
+                    Scan the 4 surroundings
+                    If fresh orange --> mark rotten 
+                        Track this as rotten now
+                        Push to queue
+                    Otherwise --> pop the current rotten orange from queue
+            Now scan again for any fresh oranges --> if any, return -1
+                OPTMIZED to avoid this second scan with variables numRotten, numFruits
+            Return t 
+
+        Time: O(mn) where m=# of rows, n=# of columns
+        Space: O(mn)
+        NOTE: Splice worsens time and space complexity
+    */
+
+    let numFruits = 0;
+    let numRotten = 0;
+    const queue = [];
+
+    for(let i=0; i<grid.length; i++) {
+        for(let j=0; j<grid[0].length; j++) {
+            if(grid[i][j] === 1) {
+                numFruits++;
+            }
+
+            if(grid[i][j] === 2) {
+                numFruits++;
+                numRotten++;
+                queue.push([i, j]); //to be visited for BFS
+            }
+        }
+    }
+
+    if(numFruits > 0 && numRotten === 0) {
+        return -1; //impossible state - no rotten fruit in the fresh fruits
+    }
+
+    if(numFruits === numRotten) {
+        //all are already rotten, return
+        return 0;
+    }
+
+    let t = -1;
+    while(queue.length > 0) {
+        t++;
+        let qLen = queue.length;
+        for(let i=0; i<qLen; i++) {
+            const [r, c] = queue.splice(0, 1)[0];
+            //check the four directions if any fresh fruit (turn rotten and push to queue)
+            //north
+            if(r - 1 >= 0 && r - 1 < grid.length && c >= 0 && c < grid[0].length && grid[r-1][c] === 1) {
+                grid[r-1][c] = 2;
+                queue.push([r-1, c]);
+                numRotten++;
+            }
+    
+            //south
+            if(r + 1 >= 0 && r + 1 < grid.length && c >= 0 && c < grid[0].length && grid[r+1][c] === 1) {
+                grid[r+1][c] = 2;
+                queue.push([r+1, c]);
+                numRotten++;
+            }
+    
+            //east
+            if(r >= 0 && r < grid.length && c + 1 >= 0 && c + 1 < grid[0].length && grid[r][c+1] === 1) {
+                grid[r][c+1] = 2;
+                queue.push([r, c+1]);
+                numRotten++;
+            }
+    
+            //west
+            if(r >= 0 && r < grid.length && c - 1 >= 0 && c - 1 < grid[0].length && grid[r][c-1] === 1) {
+                grid[r][c-1] = 2;
+                queue.push([r, c-1]);
+                numRotten++;
+            }
+        }
+    }
+
+    //some still fresh, impossible case
+    if(numFruits > numRotten) {
+        return -1;
+    }
+
+    return t;
+};
