@@ -1,0 +1,76 @@
+/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var canPartition = function(nums) {
+    /*
+        This is a Dynamic Programming problem, where i am simulating how the array is partitioned into two subsets. 
+        
+        Note - Since the subset sums must be equal, x + x = 2x, the total array sum must be even
+
+        First check - scan the array and get total sum
+            If odd --> return false
+
+        Now, we know the sum is even, we can now just check if we can get a subset equal to total / 2 
+        
+        Backtracking: Try a configuration, 
+            if it works, return true
+            If it overshoots, return false
+            So at each index, 
+                you either consider it
+                    if half the total reached, return true
+                    if you overshoot, return false
+                or you don't and move on
+        PROBLEM - Exponential Growth O(2^n) time complexity
+
+        DP: Build upto half the sum
+            For each number in the array, 
+                Dynamically check if it is possible to build numbers between it up to 11
+                Try until you meet such a possibility -> return true
+        Return false
+    */
+
+    // const total = BigInt(nums.reduce((acc, curr) => acc += BigInt(curr), 0n)); 
+    const total = nums.reduce((acc, curr) => acc += curr, 0); 
+    if(total % 2 === 1) {
+        return false; //odd sum
+    }
+
+    //I used bigInt because i thought sum may be too large but it was just exponential calls
+    // const half = BigInt(total / BigInt(2));
+    // const bt = (i, currSum, currSet) => {
+    //     if(currSum === half) {
+    //         return true;
+    //     }
+
+    //     if(i >= nums.length || currSum > half) {
+    //         return false;
+    //     }
+
+    //     //else you still need to consider more numbers
+    //     //either don't consider
+    //     let dont = bt(i + 1, currSum, currSet);
+
+    //     //or do consider
+    //     currSet.push(nums[i]);
+    //     let consider = bt(i + 1, currSum + BigInt(nums[i]), currSet);
+       
+    //     return dont || consider;
+    // };
+
+    // let outcome = bt(0, 0n, []);
+    // return outcome;
+
+    //Dynamic Programming below
+    const half = total / 2;
+    const dp = Array(half + 1).fill(false);
+    dp[0] = true; //Can always have subset with total = 0 (empty set)
+
+    for(const num of nums) {
+        for(let t=half; t>=num; t--) {
+            if(dp[t-num]) dp[t] = true;
+        }
+    }
+
+    return dp[half]; //possible
+};
