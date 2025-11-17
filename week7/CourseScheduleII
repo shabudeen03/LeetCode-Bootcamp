@@ -1,0 +1,60 @@
+/**
+ * @param {number} numCourses
+ * @param {number[][]} prerequisites
+ * @return {number[]}
+ */
+var findOrder = function(numCourses, prerequisites) {
+    /*
+        You want to keep track of - order of courses & currently visited courses
+        For each course, check for cycle
+        If cycle detected, return false to return []
+        If already in ordering, skip
+        Otherwise, check its prereqs
+        If satisfied, add to ordering and return true
+        Return the final ordering
+
+        Time: O(V^2 + E) because of IndexOF operation
+        Space: O(V + E) for V courses and E edges between courses
+    */
+    const adjList = new Map();
+    for(let i=0; i<numCourses; i++) {
+        adjList.set(i, []);
+    }
+
+    for(const [a, b] of prerequisites) {
+        adjList.get(a).push(b);
+    }
+
+    const ordering = []; //the ordering to return
+    const visited = new Set(); //detect cycle
+
+    const dfs = (crs) => {
+        if(visited.has(crs)) {
+            return false; //cycle detected
+        }
+
+        if(ordering.indexOf(crs) >= 0) {
+            //already visited and succeeded
+            return true;
+        }
+
+        visited.add(crs);
+        for(const prereq of adjList.get(crs)) {
+            if(!dfs(prereq)) {
+                return false;
+            }
+        }
+
+        ordering.push(crs);
+        visited.delete(crs);
+        return true;
+    };
+
+    for(let i=0; i<numCourses; i++) {
+        if(!dfs(i)) {
+            return [];
+        }
+    }
+
+    return ordering; 
+};
