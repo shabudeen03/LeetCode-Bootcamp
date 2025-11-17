@@ -1,0 +1,50 @@
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number[]}
+ */
+var rightSideView = function(root) {
+    if(root === null) {
+        return [];
+    }
+
+    /*
+        BFS - Queue + Array
+            Use Queue to iterate level by level for BFS
+            Use Array to push rightmost element for each level during level order traversal
+
+        Time: O(N) as trees have max n-1 edges & n nodes
+        Space: O(N) due to n nodes requiring n-size array
+
+        NOTE: The splice method actually worsens the time complexity
+    */
+
+    const queue = [];
+    const array = [];
+    queue.push(root);
+    while(queue.length > 0) {
+        console.log(queue);
+        const qLen = queue.length;
+
+        //push rightmost to array
+        const rightMost = queue[qLen - 1].val;
+        array.push(rightMost);
+
+        //now iterate level order
+        for(let i=0; i<qLen; i++) {
+            const curr = queue[0];
+            queue.splice(0, 1); //remove element now
+            if(curr.left) queue.push(curr.left);
+            if(curr.right) queue.push(curr.right);
+        }
+    }
+
+    return array;
+};
