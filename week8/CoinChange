@@ -1,0 +1,38 @@
+/**
+ * @param {number[]} coins
+ * @param {number} amount
+ * @return {number}
+ */
+var coinChange = function(coins, amount) {
+    /*
+        Dynamic Programming - Consider building up to amount using the min count method
+        [1, 2, 5] = 21
+            4*5 + 1 is the best (5 coins)
+        
+        dp = array[amount + 1]
+        Build from 0 to amount dynamically
+            At each current Amount, minimum is either the existing or value from one of the coins
+
+        Time: O(mn) where m = number of coins, n = amount
+        Space: O(n)   
+    */
+
+    const array = Array(amount + 1).fill(amount + 1); //if 1 coin is min, at most amount coins required, amount + 1 shows impossibility
+    array[0] = 0; 
+    
+    for(let i=1; i<=amount; i++) {
+        for(let j=0; j<coins.length; j++) {
+            if(i - coins[j] >= 0) {
+                //either current solution is minimal, or the new one is, or both same
+                array[i] = Math.min(array[i], array[i - coins[j]] + 1);
+            }
+        }
+    }
+
+    //impossible configuration, can never get to this sum
+    if(array[amount] === amount + 1) {
+        return -1;
+    }
+
+    return array[amount];
+};
